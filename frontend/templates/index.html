@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fraud Detection System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="main-container">
+
+    <div class="card">
+        <h1>💳 Fraud Detection System</h1>
+
+        <form action="/predict" method="post">
+
+            <div class="grid">
+
+                <div class="input-group">
+                    <label>Account Age (days)</label>
+                    <input type="number" name="account_age_days" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Total Transactions</label>
+                    <input type="number" name="total_transactions_user" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Average Amount</label>
+                    <input type="number" name="avg_amount_user" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Transaction Amount</label>
+                    <input type="number" name="amount" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Shipping Distance (km)</label>
+                    <input type="number" name="shipping_distance_km" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Transaction Hour</label>
+                    <input type="number" name="hour" min="0" max="23" required>
+                </div>
+
+            </div>
+
+            <h3>🔍 Transaction Details</h3>
+
+            <div class="grid">
+
+                <div class="input-group">
+                    <label>Country</label>
+                    <select name="country">
+                        <option value="0">India</option>
+                        <option value="1">USA</option>
+                        <option value="2">UK</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>BIN Country</label>
+                    <select name="bin_country">
+                        <option value="0">India</option>
+                        <option value="1">USA</option>
+                        <option value="2">UK</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Channel</label>
+                    <select name="channel">
+                        <option value="0">Web</option>
+                        <option value="1">Mobile</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Merchant Category</label>
+                    <select name="merchant_category">
+                        <option value="0">Electronics</option>
+                        <option value="1">Clothing</option>
+                        <option value="2">Groceries</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Promo Used</label>
+                    <select name="promo_used">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>AVS Match</label>
+                    <select name="avs_match">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>CVV Result</label>
+                    <select name="cvv_result">
+                        <option value="0">Fail</option>
+                        <option value="1">Pass</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>3D Secure</label>
+                    <select name="three_ds_flag">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button type="submit">🔍 Detect Fraud</button>
+
+        </form>
+
+        {% if prediction_text %}
+            <div class="result">
+                {{ prediction_text }}
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
