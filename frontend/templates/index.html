@@ -1,137 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fraud Detection System</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="main-container">
+{#- Both macros read from `form`, which is FORM_DEFAULTS overlaid with the last
+    submission, so a prediction re-renders with the user's own values. -#}
+{% macro number_field(name, label, min, step, max=None) %}
+    <div class="input-group">
+        <label for="{{ name }}">{{ label }}</label>
+        <input id="{{ name }}" type="number" name="{{ name }}"
+               min="{{ min }}" step="{{ step }}"{% if max %} max="{{ max }}"{% endif %}
+               value="{{ form[name] }}" required>
+    </div>
+{% endmacro %}
 
+{% macro select_field(name, label) %}
+    <div class="input-group">
+        <label for="{{ name }}">{{ label }}</label>
+        <select id="{{ name }}" name="{{ name }}">
+            {% for opt in choices[name] %}
+                <option value="{{ opt.value }}"
+                        {{ 'selected' if form[name] == opt.value|string else '' }}>{{ opt.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+<div class="main-container">
     <div class="card">
         <h1>💳 Fraud Detection System</h1>
 
+        {% if error %}
+            <div class="error">⚠️ {{ error }}</div>
+        {% endif %}
+
         <form action="/predict" method="post">
 
+            <h3>Account &amp; Amount</h3>
             <div class="grid">
-
-                <div class="input-group">
-                    <label>Account Age (days)</label>
-                    <input type="number" name="account_age_days" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Total Transactions</label>
-                    <input type="number" name="total_transactions_user" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Average Amount</label>
-                    <input type="number" name="avg_amount_user" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Transaction Amount</label>
-                    <input type="number" name="amount" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Shipping Distance (km)</label>
-                    <input type="number" name="shipping_distance_km" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Transaction Hour</label>
-                    <input type="number" name="hour" min="0" max="23" required>
-                </div>
-
+                {{ number_field("account_age_days", "Account Age (days)", 0, 1, 50000) }}
+                {{ number_field("shipping_distance_km", "Shipping Distance (km)", 0, 0.1, 50000) }}
+                {{ number_field("avg_amount_user", "Average Amount", 0, 0.01) }}
+                {{ number_field("amount", "Transaction Amount", 0, 0.01) }}
             </div>
 
-            <h3>🔍 Transaction Details</h3>
-
+            <h3>Transaction Details</h3>
             <div class="grid">
-
-                <div class="input-group">
-                    <label>Country</label>
-                    <select name="country">
-                        <option value="0">India</option>
-                        <option value="1">USA</option>
-                        <option value="2">UK</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>BIN Country</label>
-                    <select name="bin_country">
-                        <option value="0">India</option>
-                        <option value="1">USA</option>
-                        <option value="2">UK</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Channel</label>
-                    <select name="channel">
-                        <option value="0">Web</option>
-                        <option value="1">Mobile</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Merchant Category</label>
-                    <select name="merchant_category">
-                        <option value="0">Electronics</option>
-                        <option value="1">Clothing</option>
-                        <option value="2">Groceries</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Promo Used</label>
-                    <select name="promo_used">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>AVS Match</label>
-                    <select name="avs_match">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>CVV Result</label>
-                    <select name="cvv_result">
-                        <option value="0">Fail</option>
-                        <option value="1">Pass</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>3D Secure</label>
-                    <select name="three_ds_flag">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>
-
+                {#- Options come from the encoder vocabularies saved during
+                    training, so submitted codes always match the model. -#}
+                {{ select_field("country", "Billing Country") }}
+                {{ select_field("bin_country", "Card BIN Country") }}
+                {{ select_field("channel", "Channel") }}
+                {{ select_field("cvv_result", "CVV Result") }}
+                {{ select_field("avs_match", "AVS Match") }}
+                {{ select_field("three_ds_flag", "3D Secure") }}
+                {{ select_field("promo_used", "Promo Used") }}
             </div>
 
-            <button type="submit">🔍 Detect Fraud</button>
-
+            <button type="submit">Detect Fraud</button>
         </form>
 
-        {% if prediction_text %}
-            <div class="result">
-                {{ prediction_text }}
+        {% if result %}
+            <div class="result {{ 'fraud' if result.is_fraud else 'legit' }}">
+                <div class="verdict">
+                    {{ "⚠️" if result.is_fraud else "✅" }} {{ result.label }}
+                </div>
+                <div class="meter">
+                    <div class="meter-fill" style="width: {{ result.risk_percent }}%"></div>
+                </div>
+                <div class="score">
+                    Fraud risk <strong>{{ result.risk_percent }}%</strong>
+                    <span class="muted">(flagged at ≥ {{ (result.threshold * 100) | round(2) }}%)</span>
+                </div>
             </div>
         {% endif %}
 
+        {% if metadata %}
+            <div class="model-info">
+                Model: <strong>{{ metadata.model }}</strong>
+                {%- if metadata.resampling %} ({{ metadata.resampling }}){% endif %}
+                · trained on {{ "{:,}".format(metadata.n_rows_total) }} transactions
+                {%- if metadata.test_metrics_tuned_threshold %}
+                · test PR-AUC {{ metadata.test_metrics_tuned_threshold.pr_auc | round(4) }}
+                · precision {{ metadata.test_metrics_tuned_threshold.precision | round(3) }}
+                · recall {{ metadata.test_metrics_tuned_threshold.recall | round(3) }}
+                {%- endif %}
+            </div>
+        {% endif %}
     </div>
-
 </div>
 
 </body>

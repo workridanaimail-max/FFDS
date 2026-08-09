@@ -1,0 +1,141 @@
+{
+  "trained_at": "2026-07-25T19:00:23.535329+00:00",
+  "sklearn_version": "1.9.0",
+  "model": "Hist Gradient Boosting",
+  "resampling": "class_weight",
+  "threshold": 0.9687274447014317,
+  "n_rows_total": 299695,
+  "n_rows_train": 209786,
+  "features": [
+    "account_age_days",
+    "avg_amount_user",
+    "amount",
+    "shipping_distance_km",
+    "promo_used",
+    "avs_match",
+    "three_ds_flag",
+    "country",
+    "bin_country",
+    "channel",
+    "cvv_result",
+    "amount_deviation",
+    "country_mismatch"
+  ],
+  "validation_pr_auc": 0.8721305684155226,
+  "test_metrics_default_threshold": {
+    "threshold": 0.5,
+    "accuracy": 0.9555555555555556,
+    "precision": 0.3172216254923022,
+    "recall": 0.9068577277379734,
+    "f1": 0.470026525198939,
+    "roc_auc": 0.9776526627508413,
+    "pr_auc": 0.8642905999130085
+  },
+  "test_metrics_tuned_threshold": {
+    "threshold": 0.9687274447014317,
+    "accuracy": 0.9933933933933934,
+    "precision": 0.9314720812182741,
+    "recall": 0.7512794268167861,
+    "f1": 0.831728045325779,
+    "roc_auc": 0.9776526627508413,
+    "pr_auc": 0.8642905999130085
+  },
+  "leaderboard": [
+    {
+      "Model": "Logistic Regression",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.5997993125030348,
+      "Val ROC-AUC": 0.9416544132390411
+    },
+    {
+      "Model": "Random Forest",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8510479823850577,
+      "Val ROC-AUC": 0.9742886908246842
+    },
+    {
+      "Model": "Balanced Random Forest",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8292778663647327,
+      "Val ROC-AUC": 0.9772292574356526
+    },
+    {
+      "Model": "Hist Gradient Boosting",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8721305684155226,
+      "Val ROC-AUC": 0.9779853635690137
+    },
+    {
+      "Model": "LightGBM",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8649372432923498,
+      "Val ROC-AUC": 0.9748840750919184
+    },
+    {
+      "Model": "XGBoost",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8641639789641969,
+      "Val ROC-AUC": 0.9739375139545006
+    },
+    {
+      "Model": "CatBoost",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.867194170048154,
+      "Val ROC-AUC": 0.9788284231296209
+    },
+    {
+      "Model": "Logistic Regression",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.6033575116119411,
+      "Val ROC-AUC": 0.9410508829066202
+    },
+    {
+      "Model": "Random Forest",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.8370875344310644,
+      "Val ROC-AUC": 0.9749186842317246
+    },
+    {
+      "Model": "Balanced Random Forest",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.838775587780699,
+      "Val ROC-AUC": 0.974970213912646
+    },
+    {
+      "Model": "Hist Gradient Boosting",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.8562395444195308,
+      "Val ROC-AUC": 0.971615140593288
+    },
+    {
+      "Model": "LightGBM",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.856966937516473,
+      "Val ROC-AUC": 0.9707722788656925
+    },
+    {
+      "Model": "XGBoost",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.8618876713302749,
+      "Val ROC-AUC": 0.9724979878637128
+    },
+    {
+      "Model": "CatBoost",
+      "Strategy": "SMOTE",
+      "Val PR-AUC": 0.8578434706104557,
+      "Val ROC-AUC": 0.9739295889967979
+    },
+    {
+      "Model": "Voting (Hist Gradient Boosting + CatBoost + RF)",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8667800772372221,
+      "Val ROC-AUC": 0.9778747516410189
+    },
+    {
+      "Model": "Stacking (Hist Gradient Boosting + CatBoost + RF + LR)",
+      "Strategy": "class_weight",
+      "Val PR-AUC": 0.8647789089050534,
+      "Val ROC-AUC": 0.9778685839059493
+    }
+  ]
+}
